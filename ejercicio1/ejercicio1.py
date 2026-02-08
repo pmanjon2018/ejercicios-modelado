@@ -15,6 +15,10 @@ startPosition = [0, 0, 1]
 
 robotId = p.loadURDF("ejercicio1.urdf", startPosition, startOrientation)
 
+# Sliders para controlar los giros
+slider_horizontal = p.addUserDebugParameter("horizontal_z", -math.pi, math.pi, 0.0)
+slider_vertical = p.addUserDebugParameter("vertical_y", -math.pi/2, math.pi/2, 0.0)
+
 for i in range(10000):
     p.stepSimulation()
     time.sleep(1./240.)

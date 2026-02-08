@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+
+<robot name="robot_ej1">
+
+    <!-- Fijate, la base comienza en el (0,0,0) y tiene 0.2 de altura-->
+    <!-- ARREGLAR GEOMETRIA Y ORIGENES-->
+    <!-- BASE FIJA -->
+    <link name="base_link">
+        <visual>
+            <origin xyz="0 0 0.1" /> 
+            <geometry>
+                <box size="0.4 0.4 0.2" />
+            </geometry>
+            <material name="blue">
+                <color rgba="0 0 1 1"/>
+            </material>
+        </visual>
+    </link>
+
+    <!-- PIEZA HORIZONTAL -->
+    <link name="horizontal_link">
+        <visual>
+            <origin xyz="0 0 0.1" />
+            <geometry>
+                <box size="0.4 0.4 0.2" />
+            </geometry>
+            <material name="blue">
+                <color rgba="0 0 1 1"/>
+            </material>
+        </visual>
+    </link>
+
+    <!-- PIEZA VERTICAL -->
+    <link name="vertical_link">
+        <visual>
+            <origin xyz="0 0 0.1" />
+            <geometry>
+                <box size="0.4 0.4 0.2" />
+            </geometry>
+            <material name="blue">
+                <color rgba="0 0 1 1"/>
+            </material>
+        </visual>
+    </link>
+
+    <!-- JOINT 1: BASE -> HORIZONTAL (rota SÓLO en Z) -->
+    <joint name="base_to_horizontal" type="revolute">
+        <parent link="base_link"/>
+        <child link="horizontal_link"/>
+        <!-- el joint está en la parte superior de la base -->
+        <origin xyz="0 0 0.05" rpy="0 0 0"/>
+        <!-- eje de rotación Z -->
+        <axis xyz="0 0 1"/>
+        <limit lower="-3.1416" upper="3.1416" effort="10.0" velocity="1.0"/>
+    </joint>
+
+    <!-- JOINT 2: HORIZONTAL -> VERTICAL (rota en Y) -->
+    <joint name="horizontal_to_vertical" type="revolute">
+        <parent link="horizontal_link"/>
+        <child link="vertical_link"/>
+        <!-- extremo de la barra horizontal -->
+        <origin xyz="0.5 0 0" rpy="0 0 0"/>
+        <!-- eje de rotación Y -->
+        <axis xyz="0 1 0"/>
+        <limit lower="-1.5708" upper="1.5708" effort="10.0" velocity="1.0"/>
+    </joint>
+
+</robot>
