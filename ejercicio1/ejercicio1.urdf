@@ -2,67 +2,102 @@
 
 <robot name="robot_ej1">
 
-    <!-- Fijate, la base comienza en el (0,0,0) y tiene 0.2 de altura-->
-    <!-- ARREGLAR GEOMETRIA Y ORIGENES-->
+    <!-- Fijate, la base comienza en el (0,0,0) y tiene 0.8 de altura-->
     <!-- BASE FIJA -->
     <link name="base_link">
         <visual>
-            <origin xyz="0 0 0.1" /> 
+            <origin xyz="0 0 0"/> 
             <geometry>
-                <box size="0.4 0.4 0.2" />
+                <box size="0.4 0.4 0.2"/>
             </geometry>
-            <material name="blue">
-                <color rgba="0 0 1 1"/>
+            <material name="white">
+                <color rgba="0.9 0.9 0.9 1"/> 
             </material>
         </visual>
-    </link>
 
-    <!-- PIEZA HORIZONTAL -->
-    <link name="horizontal_link">
-        <visual>
-            <origin xyz="0 0 0.1" />
+        <collision>
+            <origin xyz="0 0 0"/>
             <geometry>
-                <box size="0.4 0.4 0.2" />
+                <box size="0.4 0.4 0.2"/>
             </geometry>
-            <material name="blue">
-                <color rgba="0 0 1 1"/>
-            </material>
-        </visual>
+        </collision>
+        
+        <inertial>
+            <origin xyz="0 0 0"/>
+            <mass value="1.0"/>
+            <inertia ixx="0.01" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.01"/>
+        </inertial>
     </link>
 
     <!-- PIEZA VERTICAL -->
-    <link name="vertical_link">
+    <link name="body_vertical_link">
         <visual>
-            <origin xyz="0 0 0.1" />
+            <origin xyz="0 0 0.2"/>
             <geometry>
-                <box size="0.4 0.4 0.2" />
+                <box size="0.1 0.1 0.8"/>
             </geometry>
             <material name="blue">
                 <color rgba="0 0 1 1"/>
             </material>
         </visual>
+
+        <collision>
+            <origin xyz="0 0 0.2"/>
+            <geometry>
+                <box size="0.1 0.1 0.8"/>
+            </geometry>
+        </collision>
+        
+        <inertial>
+            <origin xyz="0 0 0.2"/>
+            <mass value="2.0"/>
+            <inertia ixx="0.01" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.01"/>
+        </inertial>
     </link>
 
-    <!-- JOINT 1: BASE -> HORIZONTAL (rota SÓLO en Z) -->
-    <joint name="base_to_horizontal" type="revolute">
+    <!-- PIEZA HORIZONTAL -->
+    <link name="body_horizontal_link">
+        <visual>
+            <!-- centro de la barra a 0.5 m en x respecto al joint -->
+            <origin xyz="0.2 0 -0.2"/>
+            <geometry>
+                <box size="0.3 0.1 0.1"/>
+            </geometry>
+            <material name="blue">
+                <color rgba="0 0 1 1"/>
+            </material>
+        </visual>
+
+        <collision>
+            <origin xyz="0.2 0 -0.2"/>
+            <geometry>
+                <box size="0.3 0.1 0.1"/> 
+            </geometry>
+        </collision>
+        
+        <inertial>
+            <origin xyz="0.2 0 -0.2"/>
+            <mass value="2.0"/>
+            <inertia ixx="0.01" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.01"/>
+        </inertial>
+    </link>
+
+    <!-- JOINT 1: BASE -> VERTICAL (rota en Y, el que quieras) -->
+    <joint name="base_to_vertical" type="revolute">
         <parent link="base_link"/>
-        <child link="horizontal_link"/>
-        <!-- el joint está en la parte superior de la base -->
-        <origin xyz="0 0 0.05" rpy="0 0 0"/>
-        <!-- eje de rotación Z -->
-        <axis xyz="0 0 1"/>
-        <limit lower="-3.1416" upper="3.1416" effort="10.0" velocity="1.0"/>
+        <child link="body_vertical_link"/>
+        <origin xyz="0 0 0.2"/>  <!-- Parte superior base -->
+        <axis xyz="0 1 0"/>      <!-- Giro Y -->
+        <limit lower="-1.5708" upper="1.5708" effort="10.0" velocity="1.0"/>
     </joint>
 
-    <!-- JOINT 2: HORIZONTAL -> VERTICAL (rota en Y) -->
-    <joint name="horizontal_to_vertical" type="revolute">
-        <parent link="horizontal_link"/>
-        <child link="vertical_link"/>
-        <!-- extremo de la barra horizontal -->
-        <origin xyz="0.5 0 0" rpy="0 0 0"/>
-        <!-- eje de rotación Y -->
-        <axis xyz="0 1 0"/>
-        <limit lower="-1.5708" upper="1.5708" effort="10.0" velocity="1.0"/>
+    <!-- JOINT 2: VERTICAL -> HORIZONTAL (rota SOLO en Z) -->
+    <joint name="vertical_to_horizontal" type="revolute">
+        <parent link="body_vertical_link"/>
+        <child link="body_horizontal_link"/>
+        <origin xyz="0 0 0.8"/>  <!-- Parte SUPERIOR vertical -->
+        <axis xyz="0 0 1"/>      <!-- SOLO Z como pedías para horizontal -->
+        <limit lower="-3.1416" upper="3.1416" effort="10.0" velocity="1.0"/>
     </joint>
 
 </robot>
